@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alex/Extra/GitHub/NeuralNetworksLearning/01/train.cpp
+cmath
+-
+ostream
+-
+iomanip
+-
+iostream
+-
+
