@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/alex/Extra/GitHub/NeuralNetworksLearning/01/train.cpp
+/home/alex/GitHub/NeuralNetworksLearning/01/train.cpp
 cmath
 -
 ostream
@@ -14,5 +14,11 @@ ostream
 iomanip
 -
 iostream
+-
+opencv2/opencv.hpp
+-
+stdlib.h
+-
+fstream
 -
 
