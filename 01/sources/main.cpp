@@ -7,9 +7,23 @@
 #include "Dataset.h"
 #include "Network.h"
 
+#define N_SAMPLES 20
+
+float f1(float x)
+{
+    return 2.0f / (2.0f + x * x);
+}
+
+float f2(float x)
+{
+    return 5.0f / (5.0f + x * x);
+}
+
 void func(float * in, float * out)
 {
-    out[0] = (in[0] * in[1] > 0.07) ? 1 : 0;
+    for (int i = 0; i < N_SAMPLES; ++i) {
+        in[i] = (out[0] - 0.5f) * f1((float)i / N_SAMPLES) + (out[1] - 0.5f) * f2((float)i / N_SAMPLES);
+    }
 }
 
 int main()
@@ -20,19 +34,18 @@ int main()
     datafile.close();
     */
 
-    Dataset * dataset = new Dataset(func, 2, 1, new float[2] {-1, -1}, new float[2] {1, 1}, 20);
+    Dataset * dataset = new Dataset(func, N_SAMPLES, 2, new float[2] {0.01f, 0.01f}, new float[2] {0.99f, 0.99f}, 20, false);
 
-    std::cout << dataset;
-
-    /*
-	std::ifstream netfile("netDigits3.txt");
+/*
+	std::ifstream netfile("net.txt");
 	Network * net = new Network(netfile);
 	netfile.close();
-
 */
+
+
     srandom(time(NULL));
-    Network * net = new Network(dataset, 1, new int[2]{16,1});
-    net->train(dataset, 0.01);
+    Network * net = new Network(dataset, 0, new int[2]{2,4});
+    net->train(dataset, 0.001);
 
     std::ofstream netSaveFile;
     netSaveFile.open("net.txt");
@@ -40,6 +53,18 @@ int main()
     netSaveFile.close();
 
     std::cout << "------------------------\n";
+
+
+    float * signal = new float[40];
+    float * spectrum = new float[2] {0.35f, 0.45f};
+
+    func(signal, spectrum);
+
+    net->copyFeaturesIn(signal);
+    net->process();
+    float * spectrumOut = net->getFeaturesOut();
+
+    std::cout << spectrumOut[0] << "\n" << spectrumOut[1] << "\n";
 
 //	net->printMistakes(std::cout, dataset);
 

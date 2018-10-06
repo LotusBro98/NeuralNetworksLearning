@@ -99,19 +99,23 @@ Dataset::~Dataset()
     delete [] pointLabels;
 }
 
-Dataset::Dataset(void (*func)(float *, float *), int nIn, int nOut, float *start, float *end, int parts)
-:Dataset(static_cast<int>(std::pow(parts, nIn)), nIn, nOut)
-{
-    //float * pointIn = new float[nIn];
-    //float * pointOut = new float[nOut];
+Dataset::Dataset(void (*func)(float *, float *), int nIn, int nOut, float *start, float *end, int parts, bool stepIn)
+:Dataset(static_cast<int>(std::pow(parts, stepIn ? nIn : nOut)), nIn, nOut) {
     for (int i = 0; i < nPoints; ++i) {
-        float * pointIn = getPointFeatures(i);
-        float * pointOut = getPointLabels(i);
+        float *pointIn = getPointFeatures(i);
+        float *pointOut = getPointLabels(i);
 
         int num = i;
-        for (int j = 0; j < nIn; ++j) {
-            pointIn[j] = (num % parts) * (end[j] - start[j]) / parts + start[j];
-            num /= parts;
+        if (stepIn) {
+            for (int j = 0; j < nIn; ++j) {
+                pointIn[j] = (num % parts) * (end[j] - start[j]) / parts + start[j];
+                num /= parts;
+            }
+        } else {
+            for (int j = 0; j < nOut; ++j) {
+                pointOut[j] = (num % parts) * (end[j] - start[j]) / parts + start[j];
+                num /= parts;
+            }
         }
 
         func(pointIn, pointOut);

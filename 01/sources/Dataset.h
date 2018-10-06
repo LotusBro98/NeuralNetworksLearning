@@ -20,7 +20,7 @@ public:
 
     explicit Dataset(std::istream& is);
 
-    Dataset(void (*func)(float * in, float * out), int nIn, int nOut, float * start, float * end, int parts);
+    Dataset(void (*func)(float * in, float * out), int nIn, int nOut, float * start, float * end, int parts, bool stepIn = true);
 
     friend std::ostream& operator<< (std::ostream& os, Dataset * dataset);
 
